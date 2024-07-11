@@ -1,7 +1,8 @@
 'use client'
 
 import Todo from "@/components/Todo";
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -11,22 +12,37 @@ export default function Home() {
     description: ""
   })
 
+  const [todoData,setTodoData] = useState([])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-
-      toast.success('Added Successfully')
+      //api code
+      const response = await axios.post('/api', formData)
+      setFormData({
+        title: "",
+        description: ""
+      })
+      toast.success(response.data.msg)
     } catch (error) {
       toast.error("Error")
     }
   }
 
+  const fetchData = async()=>{
+    const response = await axios.get('/api')
+    setTodoData(response.data)
+    // console.log(response);
+  }
+  useEffect(()=>{
+    fetchData()
+  },[])
   console.log(formData);
   return (
     <>
       <form onSubmit={handleSubmit} className="flex items-start flex-col gap-2 w-[80%] max-w-[600px] mt-24 px-2 mx-auto">
-        <input type="text" name="title" placeholder="Enter Title " className="px-3 py-2 border-2 w-full" onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
-        <textarea name="description" placeholder="Enter description" className="px-3 py-2 border-2 w-full" onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
+        <input type="text" name="title" placeholder="Enter Title " className="px-3 py-2 border-2 w-full" onChange={(e) => setFormData({ ...formData, title: e.target.value })} value={formData.title}/>
+        <textarea name="description" placeholder="Enter description" className="px-3 py-2 border-2 w-full" onChange={(e) => setFormData({ ...formData, description: e.target.value })} value={formData.description}/>
         <button type="submit" className="bg-orange-600 py-3 px-11 text-white">Add Todo</button>
       </form>
 
@@ -54,9 +70,8 @@ export default function Home() {
             </tr>
           </thead>
           <tbody>
-            <Todo />
-            <Todo />
-            <Todo />
+            <Todo  />
+            
 
           </tbody>
         </table>
