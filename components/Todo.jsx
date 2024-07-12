@@ -1,24 +1,25 @@
 import React from 'react'
 
-const Todo = () => {
+const Todo = ({todo,id,deleteTodo,completeTodo}) => {
+  
   return (
     <>
      <tr className="bg-white border-b ">
               <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                1
+                {id+1}
               </th>
-              <td className="px-6 py-4">
-                Study
+              <td className={`px-6 py-4 ${todo.isComplete?'line-through':""}`}>
+                {todo.title}
+              </td>
+              <td className={`px-6 py-4 ${todo.isComplete?'line-through':""}`}>
+                {todo.description}
               </td>
               <td className="px-6 py-4">
-                Learn Next.js
-              </td>
-              <td className="px-6 py-4">
-                Pending
+                {todo.isComplete?'Completed':"Pending"}
               </td>
               <td className="px-6 py-4 gap-1 flex">
-                <button className='py-2 px-4 bg-red-500 text-white'>Delete</button>
-                <button className='py-2 px-4 bg-green-500 text-white'>Done</button>
+                <button className='py-2 px-4 bg-red-500 text-white' onClick={()=>deleteTodo(todo._id)}>Delete</button>
+                {!todo.isComplete &&<button className='py-2 px-4 bg-green-500 text-white' onClick={()=>completeTodo(todo._id)}>Done</button>}
               </td>
             </tr>
     </>

@@ -23,12 +23,36 @@ export default function Home() {
         title: "",
         description: ""
       })
+      fetchData()
       toast.success(response.data.msg)
     } catch (error) {
       toast.error("Error")
     }
   }
 
+  const deleteTodo = async(id)=>{
+    try {
+      const response = await axios.delete(`/api`,{
+        params:{
+          mongoId:id
+        }
+      })
+      toast.success('Deleted')
+      fetchData()
+    } catch (error) {
+      toast.error(error)
+    }
+  }
+
+  const completeTodo = async(id)=>{
+    const response = await axios.put('/api',{},{
+      params:{
+        mongoId:id
+      }
+    })
+    toast.success(response.data.msg)
+    fetchData()
+  }
   const fetchData = async()=>{
     const response = await axios.get('/api')
     setTodoData(response.data)
@@ -70,8 +94,12 @@ export default function Home() {
             </tr>
           </thead>
           <tbody>
-            <Todo  />
-            
+            {/* <Todo  /> */}
+            {
+              todoData.map((todo,index)=>(
+                <Todo id={index}  todo={todo} deleteTodo={deleteTodo} completeTodo={completeTodo}/>
+              ))
+            }
 
           </tbody>
         </table>
